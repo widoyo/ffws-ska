@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request
+from flask import Flask, request, render_template
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -30,5 +30,21 @@ def create_app(test_config=None):
     @app.route('/.git', methods=['POST'])
     def git():
         return request.get_json()
+    
+    @app.route('/alert')
+    def alert():
+        return render_template('alert/index.html')
+    
+    @app.route('/map')
+    def map():
+        return render_template('map/index.html')
+    
+    @app.route('/about')
+    def about():
+        return render_template('about/index.html')
+    
+    @app.route('/')
+    def index():
+        return render_template('index.html')
     
     return app    

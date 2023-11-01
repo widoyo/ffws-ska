@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FFWS Kota Surakarta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        a {
+            color: #ac0c0c !important;
+        }
+        h1, h2, h3, h4 { font-weight: 300; }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <div class="col-md-3 mb-2 mb-md-0">
+              <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+                FFWS Kota Surakarta
+              </a>
+            </div>
+            {% set navbar = [
+                ('/', 'index', 'Home'),
+                ('/map', 'map', 'Peta'),
+                ('/alert', 'alert', 'Siaga'),
+                ('/about', 'about', 'About')
+            ] -%}
+      
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                {% for href, id, title in navbar %}
+                <li><a {% if id== page %}style="border-bottom: solid 2px;"{% endif %}href="{{ href|e }}" class="nav-link px-2">{{ title|e }}</a></li>
+                {% endfor %}
+            </ul>
+      
+            <div class="col-md-3 text-end">
+            </div>
+          </header>    
+    </div>
+    {% block content %}{% endblock %}
+    <div class="container-fluid" style="background-color: #ac0c0c;color:#ccc;">
+        <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
+            <div class="col mb-3">
+                <img src="/static/img/logosurakarta.png" style="width: 60px;" alt="Kota Surakarta">
+              <a href="/" class="d-flex align-items-center mb-3 text-decoration-none" style="color: #ccc !important;">
+                Dinas PUPR Kota Surakarta
+              </a>
+              <p class="text-body-white">© 2023</p>
+            </div>
+        
+            <div class="col mb-3">
+        
+            </div>
+        
+            <div class="col mb-3">
+            </div>
+        
+            <div class="col mb-3">
+            </div>
+        
+            <div class="col mb-3">
+            </div>
+          </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

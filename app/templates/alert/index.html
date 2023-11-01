@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% set page = "alert" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Riwayat Siaga</h1>
+            <p class="text-muted">Riwayat terjadinya status siaga</p>            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Waktu</th>
+                        <th>Lokasi</th>
+                        <th>Tingkat Siaga</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>
+{% endblock %}

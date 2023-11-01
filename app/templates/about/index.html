@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% set page = "about" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="headings">
+                <h2>Komponen</h2>
+                <ul>
+                    <li>Sensor & Controller (primaBot)</li>
+                    <li>Data Center & Aplikasi (FFWS SKA APP)</li>
+                    
+                </ul>    
+            </div>
+            
+            <div class="headings">
+                <h2>Lokasi Sensor</h2>
+                <ul>
+                    <li>Rumah Pompa Kedung Belang, Kelurahan Sewu</li>
+                    <li>Rumah Pompa Gandekan, Kelurahan Gandekan</li>
+                    <li>Rumah Pompa Joyotakan, Kelurahan Joyotakan</li>
+                </ul>    
+            </div>
+    
+            <div class="headings">
+                <h2>Sumber Data</h2>
+                <ul>
+                    <li>Forecasting: openweathermap.org</li>
+                    <li>Data Hujan dan TMA terkini: Balai Besar Wilayah Sungai Bengawan Solo (hidrologi.bbws-bsolo.net)</li>
+                    <li>Sensor milik sendiri</li>
+                </ul>    
+            </div>
+        </div>
+        <div class="col">
+            <h2>Aliran Data</h2>
+            <img class="img-fluid" src="/static/img/arsitektur.webp" alt="Arsitektur">
+        </div>
+    </div>
+
+    
+</div>
+
+{% endblock %}
