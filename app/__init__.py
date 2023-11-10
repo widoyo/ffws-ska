@@ -1,14 +1,37 @@
 import os
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify, current_app
+
+from flask_login import LoginManager
+from .models import User, db_wrapper, Logger, Pos
+
+DATABASE = {
+    'name': 'ffws-ska.db',
+    'engine': 'peewee.SqliteDatabase'
+}
+
+DEBUG = True
+SECRET_KEY = 'kslaiedljdso'
+
+
+login_manager = LoginManager()
+
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        return User.get_by_id(user_id)
+    except:
+        return None
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'ffws-ska.db')
-    )
+    app.config.from_object(__name__)
     
+    login_manager.init_app(app)
+    
+    db_wrapper.init_app(app)
+        
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
@@ -23,13 +46,17 @@ def create_app(test_config=None):
         pass
 
     # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
+    @app.route('/login')
+    def login():
+        if request.method == 'POST':
+            pass
+        return render_template('login.html')
 
-    @app.route('/.git', methods=['POST'])
-    def git():
-        return request.get_json()
+    @app.route('/admin')
+    def admin():
+        db = get_db()
+        poses = db.execute("SELECT * FROM pos ORDER BY nama")
+        return render_template('admin/index.html')
     
     @app.route('/alert')
     def alert():
@@ -45,6 +72,13 @@ def create_app(test_config=None):
     
     @app.route('/')
     def index():
-        return render_template('index.html')
+        eks_ch = open(os.path.join(app.instance_path,'ch.json')).read()
+        eks_tma = open(os.path.join(app.instance_path,'tma.json')).read()
+        our_poses = {
+            'kedungbelang': Logger.get(pos_id=1),
+            'gandekan': Logger.select(Logger.pos_id==2),
+            'joyotakan': Logger.get(pos_id=3)
+        }
+        return render_template('index.html', ch=eks_ch, tma=eks_tma, poses=our_poses)
     
     return app    

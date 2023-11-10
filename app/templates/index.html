@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
 {% set page = "index" %}
+
+{% block extra_head %}
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+    const ch = {{ ch|safe }}
+    const tma = '';
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -47,7 +56,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    Joyotakan
+                    Joyotakan Aki: {{ poses.joyotakan.latest_battery }}, terakhir: {{ poses.joyotakan.latest_sampling }}
                 </div>
             </div>
         </div>
