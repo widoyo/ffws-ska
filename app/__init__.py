@@ -1,7 +1,9 @@
 import os
+import datetime
 
+import requests
 from flask import Flask, request, render_template, jsonify, current_app
-
+from flask_crontab import Crontab
 from flask_login import LoginManager
 from .models import User, db_wrapper, Logger, Pos
 
@@ -13,7 +15,7 @@ DATABASE = {
 DEBUG = True
 SECRET_KEY = 'kslaiedljdso'
 
-
+crontab = Crontab()
 login_manager = LoginManager()
 
 @login_manager.user_loader
@@ -23,13 +25,20 @@ def load_user(user_id):
     except:
         return None
 
+@crontab.job(minute="5")
+def read_bbwsbs():
+    sekarang = datetime.datetime.now().strftime('%Y-%m-%d')
+    resp = requests.post('https://hidrologi.bbws-bsolo.net/api/chnew/' + sekarang)
+    if resp.status_code == 200:
+        with open('ch.json', 'w') as f:
+            f.write(resp.text)
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(__name__)
     
     login_manager.init_app(app)
-    
+    crontab.init_app(app)
     db_wrapper.init_app(app)
         
     if test_config is None:

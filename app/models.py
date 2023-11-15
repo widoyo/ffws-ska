@@ -41,7 +41,12 @@ class Pos(BaseModel):
     created = pw.DateTimeField(default=datetime.datetime.now)
     modified = pw.DateTimeField(null=True)
     
-
+    def get_ch(self, tgl=datetime.datetime.now()):
+        return tgl
+    
+    def get_tma(self, tgl=datetime.datetime.now()):
+        return tgl
+    
 class Logger(BaseModel):
     sn = pw.CharField(max_length=12, unique=True)
     pos_id = pw.IntegerField(null=True)

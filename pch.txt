@@ -1,0 +1,29 @@
+71	Ngadipiro MRG
+216	Gunungan
+27	Parangjoho
+51	Baturetno (Klimatologi)
+63	Peren ARR
+60	SongPutri
+40	Wonogiri (Klimatologi)
+39	Waduk Nawangan
+65	Giriwoyo
+69	Batuwarno
+28	Pracimantoro
+4	Jatisrono
+9	Pabelan (Klimatologi)
+50	Bendung Colo (Klimatologi)
+235	Jurug 2
+214	Rejoso
+234	Ngandong
+19	Klaten
+35	Kiringan
+20	Nepen
+70	Karangpandan
+68	Jatipuro
+64	Waduk Delingan
+36	Tritis
+55	Tawangmangu
+221	Tangen
+34	Kedungupit ARR
+17	Kalijambe
+

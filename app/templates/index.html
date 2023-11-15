@@ -2,6 +2,7 @@
 {% set page = "index" %}
 
 {% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script>
     const ch = {{ ch|safe }}
@@ -11,37 +12,38 @@
 
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col">
+    <div class="row py-5 my-5">
+        <div class="col-sm-6">
             <h1>Status <span class="text-success">Aman</span></h1>
+            <p class="fw-light text-body-tertiary">Aman jika tidak sedang hujan deras di beberapa lokasi sebelah barat dan selatan kota Surakarta</p>
         </div>
-        <div class="col"><h2>Tidak terjadi hujan saat ini</h2></div>
+        <div class="col-sm-6"><h2>Tidak terjadi hujan saat ini</h2></div>
     </div>
     <div class="row mt-5">
         <div class="col"><h2>Prakiraan Cuaca</h2></div>
     </div>
     <div class="row">
-        <div class="col">
+        <div class="col-sm-3">
             <div class="card">
                 <div class="card-body">
                     Boyolali
                 </div>
             </div></div>
-        <div class="col">
+        <div class="col-sm-3">
             <div class="card">
                 <div class="card-body">
                     Klaten
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-sm-3">
             <div class="card">
                 <div class="card-body">
                     Wonogiri
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-sm-3">
             <div class="card">
                 <div class="card-body">
                     Sukoharjo
@@ -56,7 +58,12 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    Joyotakan Aki: {{ poses.joyotakan.latest_battery }}, terakhir: {{ poses.joyotakan.latest_sampling }}
+                    <h6 class="mb-4">Joyotakan</h6> 
+                    <ul>
+                        <li><i class="bi bi-battery"></i>
+                          Aki: {{ poses.joyotakan.latest_battery }}</li>
+                        <li>terakhir: {{ poses.joyotakan.latest_sampling }}</li>
+                    </ul>, 
                 </div>
             </div>
         </div>

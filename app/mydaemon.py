@@ -1,6 +1,7 @@
 import logging
 import sys
 import datetime
+from zoneinfo import ZoneInfo
 
 import daemonocle
 import paho.mqtt.client as mqtt
@@ -15,7 +16,7 @@ from app.models import Logger, Pos, Hourly, db_wrapper
 
 TOKEN = "6487123731:AAFCzFK2Xi1BHZ8F6NQQWP9KxyY-i5SuzjM"
 ffws_ska_chat_id = -1002136462883
-alarm_msg = '[SIAGA {level}] Lokasi {lokasi} pada {waktu}'
+alarm_msg = '[*SIAGA {level}*] Lokasi *{lokasi}* pada {waktu}'
 
 def on_connect(client, userdata, flags, rc):
     client.subscribe("dpuprska")
@@ -48,10 +49,12 @@ def proses_message(sn: str, data: dict):
     # kirim alert jika perlu
     if data.get('alarm_level', None):
         if data.get('alarm_level') > 0:
+            loc = {'2309-1': 'Kedung Belang', '2309-2': 'Gandekan', '2309-3': 'Joyotakan Timur'}
             our_text = alarm_msg.format(**
                 {'level': data.get('alarm_level') or 0, 
-                'lokasi': data.get('device'), 
-                'waktu': datetime.datetime.fromtimestamp(data.get('sampling')).strftime('%H:%M %d %b')})
+                'lokasi': loc.get(data.get('device').split('/')[1]), 
+                'waktu': datetime.datetime.fromtimestamp(
+                    data.get('sampling'), ZoneInfo('Asia/Jakarta')).strftime('%H:%M, %d %b')})
             test_telegrambot(our_text)
     
     # upsert into hourly
@@ -69,9 +72,13 @@ def proses_message(sn: str, data: dict):
     if not created:
         hourly.num_data += 1
         if tick:
-            hourly.tick += tick
+            try:
+                hourly.tick += tick
+            except:
+                hourly.tick = tick
         if distance:
             hourly.distance = distance
+                
     
     
 def cb_shutdown(message, code):
@@ -100,7 +107,7 @@ def test_telegrambot(msg:str):
     tb = telebot.TeleBot(TOKEN)
     
     #tb.send_message(chat_id=-1002010036857, text="<b>Hello</b>", parse_mode='HTML')
-    tb.send_message(chat_id=ffws_ska_chat_id, text=msg)
+    tb.send_message(chat_id=ffws_ska_chat_id, text=msg, parse_mode='MarkdownV2')
     
 if __name__ == '__main__':
     from . import DATABASE, create_app
