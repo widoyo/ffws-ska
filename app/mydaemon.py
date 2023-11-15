@@ -16,7 +16,7 @@ from app.models import Logger, Pos, Hourly, db_wrapper
 
 TOKEN = "6487123731:AAFCzFK2Xi1BHZ8F6NQQWP9KxyY-i5SuzjM"
 ffws_ska_chat_id = -1002136462883
-alarm_msg = '[*SIAGA {level}*] Lokasi *{lokasi}* pada {waktu}'
+alarm_msg = '\[*SIAGA {level}*\] Lokasi *{lokasi}* pada {waktu}'
 
 def on_connect(client, userdata, flags, rc):
     client.subscribe("dpuprska")
