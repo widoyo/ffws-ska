@@ -8,7 +8,7 @@ import paho.mqtt.client as mqtt
 import telebot
 from flask import json
 
-from app.models import Logger, Pos, Hourly, db_wrapper
+from app.models import Logger, Pos, Hourly, AlertLog, Raw
 
 # TOKEN = 6487123731:AAFCzFK2Xi1BHZ8F6NQQWP9KxyY-i5SuzjM (@pupr_ska_bot)
 # chat_id = -1002010036857 (FFWS Kota Surakarta Group)
@@ -32,6 +32,10 @@ def on_message(client, userdata, msg):
         sn = data.get('device').split('/')[1]
     except:
         return
+    try:
+        raw = Raw.create(content=msg.payload, sn=sn)
+    except:
+        pass
         
     proses_message(sn, data)
     
@@ -47,28 +51,41 @@ def proses_message(sn: str, data: dict):
     logger.save()
 
     # kirim alert jika perlu
+    alarm = False
     if data.get('alarm_level', None):
         if data.get('alarm_level') > 0:
-            loc = {'2309-1': 'Kedung Belang', '2309-2': 'Gandekan', '2309-3': 'Joyotakan Timur'}
+            alarm = True
+            try:
+                loc = logger.pos.nama
+            except:
+                loc = logger.sn
             our_text = alarm_msg.format(**
                 {'level': data.get('alarm_level') or 0, 
-                'lokasi': loc.get(data.get('device').split('/')[1]), 
+                'lokasi': loc, 
                 'waktu': datetime.datetime.fromtimestamp(
                     data.get('sampling'), ZoneInfo('Asia/Jakarta')).strftime('%H:%M, %d %b')})
             test_telegrambot(our_text)
+            try:
+                new_alert = AlertLog.create(
+                    pos=logger.pos, 
+                    sampling=datetime.datetime.fromtimestamp(
+                        data.get('sampling'), ZoneInfo('Asia/Jakarta')),
+                    content=str(data))
+            except:
+                pass
     
     # upsert into hourly
     hour = data.get('sampling') - (data.get('sampling') % 3600)
     pos = Pos.get(logger.pos_id)
     tick = data.get('tick', None)
     distance = data.get('distance', None)
-    hourly, created = Hourly.get_or_create(pos_id=pos.id, sampling=hour, 
+    hourly, created = Hourly.get_or_create(pos_id=pos.id, sampling=hour, logger=logger, 
                                   defaults={'num_data': 1,
                                             'tick': tick,
                                             'distance': distance, 
                                             'rain': 0, 
                                             'wlevel': 0,
-                                            'num_alarm': 0})
+                                            'num_alarm': alarm and 1 or 0})
     if not created:
         hourly.num_data += 1
         if tick:
@@ -78,6 +95,9 @@ def proses_message(sn: str, data: dict):
                 hourly.tick = tick
         if distance:
             hourly.distance = distance
+        if alarm:
+            hourly.num_alarm += 1
+        hourly.save()
                 
     
     

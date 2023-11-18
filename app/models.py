@@ -49,7 +49,7 @@ class Pos(BaseModel):
     
 class Logger(BaseModel):
     sn = pw.CharField(max_length=12, unique=True)
-    pos_id = pw.IntegerField(null=True)
+    pos = pw.ForeignKeyField(Pos, null=True)
     tinggi_sonar = pw.IntegerField(default=1000)
     tipping_factor = pw.FloatField(default=0.2)
     latest_battery = pw.FloatField(null=True)
@@ -60,7 +60,8 @@ class Logger(BaseModel):
     
     
 class Hourly(BaseModel):
-    pos_id = pw.IntegerField()
+    pos = pw.ForeignKeyField(Pos, index=True)
+    logger = pw.ForeignKeyField(Logger, index=True)
     sampling = pw.DateTimeField()
     num_data = pw.IntegerField(default=0)
     rain = pw.FloatField(null=True)
@@ -69,15 +70,24 @@ class Hourly(BaseModel):
     distance = pw.IntegerField(null=True)
     num_alarm = pw.IntegerField(null=True)
     
+    class Meta:
+        indexes = (
+            (('pos', 'logger', 'sampling'), True),
+        )
     
 class AlertLog(BaseModel):
-    pos_id = pw.IntegerField()
+    pos = pw.ForeignKeyField(Pos, backref='alerts', index=True)
     sampling = pw.DateTimeField()
     content = pw.TextField(null=True)
     
+    class Meta:
+        indexes = (
+            (('pos', 'sampling'), True),
+        )
+    
 
 class Note(BaseModel):
-    obj = pw.CharField(max_length=50)
+    obj = pw.CharField(max_length=50, index=True)
     waktu = pw.DateTimeField(default=datetime.datetime.now())
     username = pw.CharField()
     body = pw.TextField()
